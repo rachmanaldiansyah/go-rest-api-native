@@ -94,6 +94,19 @@ func Detail(w http.ResponseWriter, r *http.Request) {
 	helpers.Response(w, 200, "Detail Author", author)
 }
 
+// Update modifies an existing author's details in the database based on the provided ID.
+// @Summary Update author
+// @Description Update an author's details by ID
+// @ID update-author
+// @Tags authors
+// @Accept json
+// @Produce json
+// @Param id path int true "Author ID"
+// @Param author body models.Author true "Updated author data"
+// @Success 200 {object} helpers.Response
+// @Failure 404 {object} helpers.Response
+// @Failure 500 {object} helpers.Response
+// @Router /authors/{id}/update [put]
 func Update(w http.ResponseWriter, r *http.Request) {
 	idParams := mux.Vars(r)["id"]
 	id, _ := strconv.Atoi(idParams)
@@ -123,4 +136,36 @@ func Update(w http.ResponseWriter, r *http.Request) {
 	}
 
 	helpers.Response(w, 200, "Successfully updated author", nil)
+}
+
+// Delete removes an author from the database based on the provided ID.
+// @Summary Delete author
+// @Description Delete an author by ID
+// @ID delete-author
+// @Tags authors
+// @Accept json
+// @Produce json
+// @Param id path int true "Author ID"
+// @Success 200 {object} helpers.Response
+// @Failure 404 {object} helpers.Response
+// @Failure 500 {object} helpers.Response
+// @Router /authors/{id}/delete [delete]
+func Delete(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)["id"]
+	id, _ := strconv.Atoi(params)
+
+	var author models.Author
+
+	res := config.DB.Delete(&author, id)
+	if res.Error != nil {
+		helpers.Response(w, 500, res.Error.Error(), nil)
+		return
+	}
+
+	if res.RowsAffected == 0 {
+		helpers.Response(w, 404, "Author not found", nil)
+		return
+	}
+
+	helpers.Response(w, 200, "Successfully deleted author", nil)
 }
