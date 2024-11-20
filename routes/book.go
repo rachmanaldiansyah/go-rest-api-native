@@ -13,5 +13,5 @@ func BookRoutes(r *mux.Router) {
 	router.HandleFunc("", book_controller.Create).Methods("POST")
 	router.HandleFunc("/{id}/detail", book_controller.Detail).Methods("GET")
 	router.HandleFunc("/{id}/update", book_controller.Update).Methods("PUT")
-	// router.HandleFunc("/{id}/delete", book_controller.Delete).Methods("DELETE")
+	router.HandleFunc("/{id}/delete", book_controller.Delete).Methods("DELETE")
 }

@@ -168,3 +168,22 @@ func Update(w http.ResponseWriter, r *http.Request) {
 
 	helpers.Response(w, 200, "Update book successfully", nil)
 }
+
+func Delete(w http.ResponseWriter, r *http.Request) {
+	idParams := mux.Vars(r)["id"]
+	id, _ := strconv.Atoi(idParams)
+
+	var books models.Book
+	res := config.DB.Delete(&books, id)
+	if res.Error != nil {
+		helpers.Response(w, 500, res.Error.Error(), nil)
+		return
+	}
+
+	if res.RowsAffected == 0 {
+		helpers.Response(w, 404, "Book not found", nil)
+		return
+	}
+
+	helpers.Response(w, 200, "Successfully deleted book", nil)
+}
