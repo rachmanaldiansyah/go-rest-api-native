@@ -1,4 +1,4 @@
-package controllers
+package author_controller
 
 import (
 	"encoding/json"
